@@ -18,8 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import br.edu.ifsp.scl.prdm.sc090578.navigationcompose.ui.theme.NavigationComposeTheme
 
 @Composable
-fun SenderScreen(modifier: Modifier, onSendClick: (String) -> Unit) {
-    var textToSend by remember { mutableStateOf("") }
+fun SenderScreen(textReceived: String = "", modifier: Modifier, onSendClick: (String) -> Unit) {
+    var textToSend by remember { mutableStateOf(textReceived) }
     Column(modifier = modifier.fillMaxWidth()) {
         OutlinedTextField(
             value = textToSend,

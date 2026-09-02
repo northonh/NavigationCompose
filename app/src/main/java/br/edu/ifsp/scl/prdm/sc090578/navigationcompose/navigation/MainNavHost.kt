@@ -12,13 +12,20 @@ import br.edu.ifsp.scl.prdm.sc090578.navigationcompose.ui.composable.ReceiverScr
 import br.edu.ifsp.scl.prdm.sc090578.navigationcompose.ui.composable.SenderScreen
 import kotlin.collections.listOf
 
+private const val TEXT_REPLIED = "text_replied"
 @Composable
 fun MainNavHost(navHostController: NavHostController, modifier: Modifier) {
     NavHost(navController = navHostController, startDestination = Screen.SenderScreen.route) {
         // Criando as rotas do grafo
-        composable(route = Screen.SenderScreen.route) {
+        composable(route = Screen.SenderScreen.route) { backStackEntry ->
+            // Recebendo um possivel texto devolvido de ReceiverScreen
+            val textReplied: String = backStackEntry.savedStateHandle.get<String>(TEXT_REPLIED) ?: ""
+
             // Enviando lambda no onSendClick que deve ser executado ao clicar no botão Send
-            SenderScreen(modifier = modifier) { textoToSend ->
+            SenderScreen(
+                textReceived = textReplied,
+                modifier = modifier
+            ) { textoToSend ->
                 navHostController.navigate("${Screen.ReceiverScreen.route}/${Uri.encode(textoToSend)}")
             }
         }
@@ -32,7 +39,13 @@ fun MainNavHost(navHostController: NavHostController, modifier: Modifier) {
             // Recuperando o argumento passado na rota e passando para o ReceiverScreen como argumento
             ReceiverScreen(
                 textReceived = backStackEntry.arguments?.getString("textReceived") ?: "",
-                modifier = modifier
+                modifier = modifier,
+                onSaveAndQuitClick = { text ->
+                    // Enviando lambda no onSaveAndQuitClick que deve ser executado ao clicar no botão Save and quit
+                    // Guarda o texto na entrada anterior da pilha de navegação (SenderScreen) e volta para ela
+                    navHostController.previousBackStackEntry?.savedStateHandle[TEXT_REPLIED] = text
+                    navHostController.popBackStack()
+                }
             )
         }
     }

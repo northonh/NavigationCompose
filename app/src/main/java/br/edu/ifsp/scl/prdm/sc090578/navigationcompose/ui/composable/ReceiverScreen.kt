@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import br.edu.ifsp.scl.prdm.sc090578.navigationcompose.ui.theme.NavigationComposeTheme
 
 @Composable
-fun ReceiverScreen(textReceived: String = "", modifier: Modifier) {
+fun ReceiverScreen(textReceived: String = "", modifier: Modifier, onSaveAndQuitClick: (String) -> Unit) {
     var textReceived by remember { mutableStateOf(textReceived) }
     Column(modifier = modifier.fillMaxWidth()) {
         OutlinedTextField(
@@ -28,7 +28,7 @@ fun ReceiverScreen(textReceived: String = "", modifier: Modifier) {
             modifier = Modifier.fillMaxWidth()
         )
         Button(
-            onClick = {},
+            onClick = { onSaveAndQuitClick(textReceived) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Save and quit")
@@ -52,7 +52,8 @@ fun ReceiverScreenPreview() {
         Surface {
             ReceiverScreen(
                 textReceived = "Text received",
-                modifier = Modifier
+                modifier = Modifier,
+                onSaveAndQuitClick = {}
             )
         }
     }
